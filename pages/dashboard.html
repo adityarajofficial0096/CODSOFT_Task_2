@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProjectBuddy | DashBoard</title>
+  <link rel="icon" type="image/x-icon" href="/public/favicon/favicon-32x32.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/task.css">
+  <link rel="stylesheet" href="css/toast.css">
+  <link rel="stylesheet" href="css/profile.css">
+</head>
+
+<body onload="onPageLoad(); ">
+  <script>
+    //Runs on page load.
+    let _isAdmin = false;
+
+    function onPageLoad() {
+      _isAdmin = isAdmin();
+
+      if (_isAdmin) {
+        let backlogEle = document.getElementById('backlog');
+        let newUserEle = document.getElementById('newUser');
+
+        backlogEle.style.display = 'block';
+        newUserEle.style.display = 'block';
+
+        // var
+      } else {
+        document.querySelectorAll('.actions').forEach(function (el) {
+          el.style.display = 'none';
+        });
+      }
+
+      loadTask();
+    }
+
+    window.onclick = function (event) {
+      var taskModal = document.getElementById("taskModal");
+      var addUserModal = document.getElementById('userModal');
+      var userProfileModal = document.getElementById('profileModal');
+
+      if (event.target == taskModal) {
+        handleTaskSubmit();
+        taskModal.style.display = 'none';
+      }
+
+      if (event.target === addUserModal) {
+        addUserModal.style.display = 'none';
+      }
+
+      if (event.target === userProfileModal) {
+        userProfileModal.style.display = 'none';
+      }
+    };
+
+    // End of modal handling functions.
+    function onChangeForTask(event) {
+      let { id, value } = event.target;
+
+      taskModalData[id] = value;
+
+      displayStartEndDate();
+
+      if (id === 'listName' && value === "Done") {
+        document.getElementById('hoursWorked').removeAttribute("disabled");
+      } else {
+        document.getElementById('hoursWorked').setAttribute("disabled", true);
+      }
+    }
+
+    function displayStartEndDate() {
+      let startDateLabel = document.getElementById('startDateLabel');
+      let dueDateLabel = document.getElementById('dueDateLabel');
+
+      if (taskModalData?.startDate) {
+        startDateLabel.style.display = 'block';
+        let startDateEle = document.getElementById("startDateValue");
+        startDateEle.innerText = readableDateFormat(taskModalData?.startDate, 'T');
+      }
+
+      if (taskModalData?.endDate) {
+        dueDateLabel.style.display = 'block';
+        let endDateEle = document.getElementById("dueDateValue");
+        endDateEle.innerText = readableDateFormat(taskModalData?.endDate, 'T');
+      }
+    }
+
+    //Add user modal handling functions.
+    function handleUserRoleSelect(event) {
+      let role = event.target.value;
+      let payRateDiv = document.getElementById('payrateContainer');
+
+      if (role === 'member') {
+        payRateDiv.style.visibility = 'visible';
+        document.getElementById("hourlyRate").required = true;
+      } else {
+        payRateDiv.style.visibility = 'hidden';
+        document.getElementById("hourlyRate").required = false;
+      }
+    }
+
+    function generateAutoPassword() {
+      let email = document.getElementById('userEmail');
+      let clipBoardEle = document.getElementById('clip-board');
+      let passwordEle = document.getElementById('autoGenPassword');
+
+      if (email.value) {
+        passwordEle.value = generatePassword(email.value);
+        clipBoardEle.style.visibility = 'visible';
+      }
+    }
+
+    function handleUserFormSubmit(event) {
+      event.preventDefault();
+
+      let email = document.getElementById("userEmail")?.value;
+      let password = document.getElementById("autoGenPassword")?.value;
+      let role = document.getElementById("userRoleSelect")?.value;
+      let hourlyRateEle = document.getElementById("hourlyRate");
+      let fullname = document.getElementById('fullname').value;
+
+      let userData = {
+        email,
+        password,
+        role,
+        fullname,
+      };
+
+      if (role === 'member') {
+        userData.hourlyRate = hourlyRateEle?.value;;
+      }
+
+      addUser(userData);
+
+      showToast('Added user...')
+
+      document.getElementById('user-form').reset();
+
+      var addUserModal = document.getElementById("userModal");
+      return addUserModal.style.display = 'none';
+    }
+
+    function copyPassword() {
+      let copyText = document.getElementById('autoGenPassword');
+      let clipBoardEle = document.getElementById('clip-board');
+
+      clipBoardEle.style.color = 'green';
+
+      copyText.select();
+      navigator.clipboard.writeText(copyText.value);
+    }
+
+    //Modal popup handling functions.
+    function onClose(event) {
+      var id = event.target.id;
+
+      if (id === 'closeUserModal') {
+        var addUserModal = document.getElementById("userModal");
+        return addUserModal.style.display = 'none';
+      }
+
+      handleTaskSubmit();
+      var taskModal = document.getElementById("taskModal");
+      taskModal.style.display = 'none';
+    }
+
+    // Modal to add new user.
+    function openAddUserModal() {
+      var addUserModal = document.getElementById('userModal');
+
+      addUserModal.style.display = 'block';
+    }
+
+  </script>
+  <div>
+    <div class="mainHeader">
+      <div class="menu">
+        <div onclick="goto('/pages/dashboard.html')"><i class="bi bi-card-heading"></i>&nbsp;DashBoard</div>
+        <div id="backlog"><i class="bi bi-safe"></i>&nbsp;Backlog</div>
+        <div id="newUser" onclick="openAddUserModal()"><i class="bi bi-plus"></i>&nbsp;New User</div>
+        <div onclick="openProfileModal()"><i class="bi bi-person-circle"></i>&nbsp;Profile</div>
+        <div onclick="logout()"><i class="bi bi-box-arrow-right"></i>&nbsp;Logout</div>
+      </div>
+    </div>
+
+    <div class="subBar">
+      <div class="title">
+        <h6>Task Management</h6><span>v0.1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- USER PROFILE MODAL -->
+    <div class="modal1" id="profileModal">
+      <div class="userProfile">
+        <div class="profile">
+          <!-- <img src="avatar.jpg" alt="Profile Picture"> -->
+          <div class="icon">
+            <i class="bi bi-person-circle h1"></i>
+          </div>
+          <h2 id="user-name"></h2>
+          <p id="user-email"></p>
+          <p id="user-role"></p>
+          <p id="user-joinedDate"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD USER MODAL -->
+    <div class="modal1" id="userModal">
+      <div class="userModalContent">
+        <span id="closeUserModal" onclick="onClose(event)" class="close">&times;</span>
+        <div class="addUserTitle">
+          <img src="/public/images/logo.png" class="logo" alt="logo">
+          <h5 style="font-weight: normal;">Add a new user</h5>
+        </div>
+        <form id='user-form' class="login-form" onsubmit="handleUserFormSubmit(event);">
+          <div class="login-row">
+            <!-- Email input -->
+            <div id="email" class="form-outline mb-4">
+              <label class="form-label" for="form2Example1">Email address</label>
+              <input onfocusout="generateAutoPassword()" type="email" id="userEmail" class="form-control" name="email"
+                required>
+            </div>
+            <div class="form-outline mb-4">
+              <label class="form-label" for="form2Example2">Full name</label>
+              <div class="fullname">
+                <input type="text" id="fullname" class="form-control" placeholder="" required>
+                </i>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="login-row">
+
+            <div class="form-outline mb-4">
+              <label class="form-label" for="form2Example2">AutoGenerated Password </label>
+              <div class="autoGenPassword">
+                <input disabled type="rate" id="autoGenPassword" class="form-control" placeholder="">
+                <i onclick="copyPassword()" id='clip-board' class="bi bi-clipboard h4 clip-board">
+                </i>
+              </div>
+            </div>
+
+            <!-- Role input -->
+            <div id="user-role" class="form-outline mb-4">
+              <label class="form-label" for="form2Example2">User role</label>
+              <select required id="userRoleSelect" class="form-select selectpicker1" aria-label="Default select example"
+                onchange="handleUserRoleSelect(event)">
+                <option disabled>Select a user role</option>
+                <option selected value="admin">Administrator</option>
+                <option value="member">Member</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="login-row">
+
+            <!-- If role input is member add this hourly rate field-->
+            <div id="payrateContainer" style="visibility: hidden;" class="form-outline mb-4">
+              <label class="form-label" for="form2Example2">Hourly Rate for </label>
+              <input type="rate" id="hourlyRate" name="hourlyRate" class="form-control" placeholder="">
+            </div>
+          </div>
+          <!-- Submit button -->
+          <button type="submit" class="btn btn-primary btn-block mb-4 w-100 bg-success">Add user</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADD/EDIT TASK MODAL -->
+    <div id="taskModal" class="modal">
+      <div class="taskMainContent">
+        <span onclick="onClose(event)" class="close">&times;</span>
+        <div class="title">
+          <i class="bi bi-briefcase " style="font-size: 25px;">&nbsp;&nbsp;</i>
+          <input onchange="onChangeForTask(event)" id="name" type="text" placeholder="Task name" />
+        </div>
+        <div style="display: flex; align-items: baseline; flex-direction: column;">
+          <span class="list" id="listType">ToDo</span>
+          <div id="dateContainer">
+            <span id="startDateLabel"><span style="font-size: 13px;">Start Date:</span> <span
+                id="startDateValue"></span> </span>
+            <span id="dueDateLabel"><span style="font-size: 13px;">Due Date:</span> <span
+                id="dueDateValue"></span></span>
+          </div>
+        </div>
+        <div class="content">
+          <div style="margin-left: 40px;">
+            <div id="descp">Description</div>
+            <textarea onchange="onChangeForTask(event)" id="description" name="description"
+              placeholder="Add a more detailed description"></textarea>
+          </div>
+
+          <div class="action cur">
+
+            <div class="divWrapper">
+              <i class="bi bi-person"></i>
+              <select onchange="onChangeForTask(event)" id='assignedTo' class="selectpicker"
+                aria-label="Default select example">
+                <option disabled selected>Members</option>
+              </select>
+            </div>
+
+            <div class="divWrapper">
+              <i class="bi bi-tag-fill"></i>
+              <select id="priority" onchange="onChangeForTask(event)" class="selectpicker"
+                aria-label="Default select example">
+                <option disabled>Label</option>
+                <option selected value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+
+            <div class="dateWrapper">
+              <label for="start"><i class="bi bi-calendar"></i>&nbsp;</i>Start Date</label>
+              <input onchange="onChangeForTask(event)" class="picker" style="text-align: center; font-weight: 500;"
+                type="datetime-local" id="startDate" name="trip-start" value="2024-06-12T19:30">
+            </div>
+
+            <div class="dateWrapper">
+              <label for="end"><i class="bi bi-calendar-check"></i>&nbsp;</i>End Date</label>
+              <input onchange="onChangeForTask(event)" class="picker" style="text-align: right; font-weight: 500;"
+                type="datetime-local" id="endDate" name="trip-end" min="2018-06-07T00:00" max="2024-06-14T00:00">
+            </div>
+
+            <div class="divWrapper">
+              <i class="bi bi-arrow-right"></i>
+              <select id="listName" onchange="onChangeForTask(event)" class="selectpicker"
+                aria-label="Default select example">
+                <option selected disabled>Move</option>
+                <option value="ToDo">ToDo</option>
+                <option value="InProgress">In Progress</option>
+                <option value="InReview">In Review</option>
+                <!-- TODO: // When a card is dragged to Done list, listName is InDone instead of Done. Rework here or there -->
+                <option value="Done">Done</option>
+              </select>
+            </div>
+
+            <div class="hoursContainer">
+              <label for="hoursWorked"><i class="bi bi-hourglass-split"></i>&nbsp;</i></label>
+              <input onchange="onChangeForTask(event)" id="hoursWorked" type="number" placeholder="" disabled >
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchContainer">
+      <i class="bi bi-search"></i><input id="searchInput" class="search-bar" type="text" placeholder="Search Items" />
+    </div>
+
+    <!-- List Type Container -->
+    <div id="listContainer">
+      <div class="containerWrapper" id="cardToDo">
+        <div class="cardType">
+          <div>
+            <span>ToDo</span>
+            <span id="totalcardToDo" class="totalTask">0</span>
+          </div>
+          <div class="actions">
+            <div id="addTaskBtn" onclick="toggleTaskModal(event, 'ToDo')"><i id="addIcon" class="bi bi-plus"></i></div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="containerWrapper" id="cardInProgress">
+        <div class="cardType">
+          <div>
+            <span>In Progress</span>
+            <span id="totalcardInProgress" class="totalTask">0</span>
+          </div>
+          <div class="actions">
+            <div id="addTaskBtn" onclick="toggleTaskModal(event, 'In Progress')"><i id="addIcon" class="bi bi-plus"></i>
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+
+      <div class="containerWrapper" id="cardInReview">
+        <div class="cardType">
+          <div>
+            <span>In Review</span>
+            <span id="totalcardInReview" class="totalTask">0</span>
+          </div>
+          <div class="actions">
+            <div id="addTaskBtn" onclick="toggleTaskModal(event, 'In Review')"><i id="addIcon" class="bi bi-plus"></i>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="containerWrapper" id="cardInDone">
+        <div class="cardType">
+          <div>
+            <span>Done</span>
+            <span id="totalcardInDone" class="totalTask">0</span>
+          </div>
+          <div class="actions">
+            <div id="addTaskBtn" onclick="toggleTaskModal(event, 'Done')"><i id="addIcon" class="bi bi-plus"></i></div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+  <div class="toast" id="toast">
+    <div class="toast-body">
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.7/dayjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.7/plugin/customParseFormat.min.js"></script>
+  <script type="module" src="./js/toast.js"></script>
+  <script type="module" src="../helpers/validators.js"></script>
+  <script type="module" src="./js/dashboard.js"></script>
+  <script type="module" src="./js/globals.js"></script>
+  <script type="module" src="./js/task.js"></script>
+  <script type="module" src="./js/profile.js"></script>
+  <script>
+    let taskModalData = {
+      name: '',
+      description: '',
+      assignedTo: '',
+      startDate: '',
+      endDate: '',
+      priority: 'low',
+      listName: 'ToDo',
+      hoursWorked: 0,
+    };
+    let taskId;
+
+    function getInitialFormValues() {
+      document.getElementById('name').value = taskModalData?.name;
+      document.getElementById('description').value = taskModalData?.description;
+      document.getElementById('assignedTo').value = taskModalData?.assignedTo;
+      document.getElementById('priority').value = taskModalData?.priority;
+      document.getElementById('startDate').value = taskModalData?.startDate;
+      document.getElementById('endDate').value = taskModalData?.endDate;
+      document.getElementById('listName').value = taskModalData?.listName;
+      document.getElementById('hoursWorked').value = taskModalData?.hoursWorked;
+    }
+
+    function toggleTaskModal(event, listType, id) {
+      let idName = event.target.id;
+
+      if (!_isAdmin) {
+        let assignedToEle = document.getElementById('assignedTo');
+
+        assignedToEle.disabled = true;
+      }
+
+      if (id) {
+        taskId = id;
+        taskModalData = getTaskById(id);
+
+        let startDateLabel = document.getElementById('startDateLabel');
+        let dueDateLabel = document.getElementById('dueDateLabel');
+
+        if (taskModalData?.startDate) {
+          startDateLabel.style.display = 'block';
+          let startDateEle = document.getElementById("startDateValue");
+          startDateEle.innerText = readableDateFormat(taskModalData?.startDate, 'T');
+        }
+
+        if (taskModalData?.endDate) {
+          dueDateLabel.style.display = 'block';
+          let endDateEle = document.getElementById("dueDateValue");
+          endDateEle.innerText = readableDateFormat(taskModalData?.endDate, 'T');
+        }
+      } else {
+        let mapper = {
+          'In Progress': 'InProgress',
+          'In Review': 'InReview',
+        };
+
+        taskModalData.listName = mapper[listType] || listType;
+      }
+
+      var taskModal = document.getElementById("taskModal");
+      var listTypeEle = document.getElementById("listType");
+
+      taskModal.style.display = 'block';
+      listTypeEle.innerHTML = listType;
+
+      let members = getMembers();
+
+
+
+      if (members?.length) {
+        let selectEle = document.getElementById('assignedTo');
+        selectEle.innerText = null;
+
+        members.forEach(member => {
+          let { email } = member;
+          selectEle.add(new Option(email, email));
+        });
+      }
+
+      if (!taskId) {
+        taskModalData.assignedTo = members[0].email;
+      }
+
+      if (listType === 'Done') {
+        document.getElementById('hoursWorked').removeAttribute("disabled");
+      }
+
+      getInitialFormValues();
+    }
+
+    function handleTaskSubmit() {
+      if (taskModalData?.name || taskModalData?.description) {
+        if (taskId) {
+          updateTask(taskId, taskModalData); //TODO: take only modified fields.
+        } else {
+          addTask(taskModalData);
+        }
+
+        window.location.reload();
+      } else {
+
+      }
+    }
+
+  </script>
+
+</body>
+
+</html>

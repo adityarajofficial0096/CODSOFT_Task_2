@@ -1,0 +1,295 @@
+.taskMainContent {
+  font-size: 12px;
+  position: absolute;
+  width: 40%;
+  margin: auto;
+  padding: 30px 40px;
+  background-color: rgb(237, 239, 241);
+  border-radius: 10px;
+  z-index: 1;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
+.taskMainContent .title {
+  display: flex;
+  align-items: center;
+}
+
+.taskMainContent .title input {
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  width: 300px;
+  border: 1px solid #E6ECF0;
+  border-radius: 5px;
+  padding-left: 10px;
+  outline: none;
+}
+
+.taskMainContent .title h5 {
+  margin: 0px;
+}
+
+.taskMainContent .list {
+  margin-left: 40px;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #494848;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.content textarea {
+  width: 300px;
+  height: 190px;
+  border: 1px solid #E6ECF0;
+  border-radius: 5px;
+  padding: 10px;
+  outline: none;
+  resize: none;
+}
+
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 40px;
+  font-weight: bold;
+  position: absolute;
+  right: 20px;
+  top: 0px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: grey;
+}
+
+.action {
+  margin-top: 5px;
+  width: 130px;
+}
+
+.action div {
+  display: flex;
+  align-items: center;
+  padding: 0px 5px;
+  border-radius: 5px;
+  background-color: rgb(221, 222, 228);
+}
+
+.action select {
+  border: none;
+  width: 100%;
+  outline: none;
+  font-size: 12px !important;
+  padding: 5px 0px;
+  background-color: transparent;
+}
+
+.action div:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.cur {
+  cursor: pointer;
+}
+
+#descp {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+#addTaskBtn {
+  cursor: pointer;
+}
+
+#addTaskBtn:hover {
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+
+}
+
+.modal1 {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.userModalContent {
+  font-size: 14px;
+  position: absolute;
+  width: 40%;
+  margin: auto;
+  padding: 20px 40px;
+  background-color: rgb(237, 239, 241);
+  border-radius: 10px;
+  z-index: 1;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+}
+
+.addUserTitle {
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+
+.logo {
+  height: 40px;
+  width: 50px;
+  margin-bottom: 15px;
+}
+
+.mainProfile {
+  display: none;
+}
+
+.login-row {
+  display: flex;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.login-row .form-outline {
+  width: 45%;
+}
+
+.selectpicker,
+.selectpicker1 {
+  font-size: 14px !important;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.selectpicker:hover {
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+}
+
+.dateWrapper {
+  font-size: 12px;
+  padding: 6px 0;
+}
+
+.dateWrapper label {
+  padding: 6px 2px;
+}
+
+.dateWrapper:hover,
+.divWrapper:hover {
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+#startDate,
+#endDate {
+  font-size: 12px;
+  border: none;
+  padding: 6px 0px;
+  background-color: transparent;
+  outline: none;
+  text-indent: -99999999px;
+  position: absolute;
+
+}
+
+input.picker[type="datetime-local"] {
+  position: relative;
+}
+
+input.picker[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+input.picker[type="datetime-local"]:hover {
+  /* color: green; */
+}
+
+#dateContainer {
+  font-weight: 500;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+#startDateLabel {
+  margin-right: 10px;
+}
+
+#startDateLabel,
+#dueDateLabel {
+  display: none;
+  width: auto;
+}
+
+#startDateValue,
+#dueDateValue {
+  font-style: normal;
+}
+
+.hoursContainer {
+  border: none;
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 0px 5px;
+  border-radius: 5px;
+}
+
+.hoursContainer label {
+  display: flex;
+}
+
+#hoursWorked {
+  border: none;
+  border-radius: 5px;
+  height: 26px;
+  width: 100%;
+  outline: none;
+  background-color: rgb(221, 222, 228);
+}
+
+#hoursWorked:disabled {
+  cursor: no-drop;
+}
+
+.hoursContainer::after {
+  position: absolute;
+  content: 'hrs';
+  right: 25px
+}

@@ -1,0 +1,237 @@
+body {
+  /* margin: 0 50px 0 50px; */
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: auto;
+  position: relative;
+  min-height: 900px;
+}
+
+.containerWrapper {
+  background-color: #E6ECF0;
+  border-radius: 5px 5px 0px 0px;
+  padding: 15px 20px;
+  width: 25%;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.containerWrapper:not(:last-child) {
+  margin-right: 20px;
+}
+
+.containerWrapper .card:not(:last-child) {
+  margin-bottom: 20px;
+
+}
+
+.assignee {
+  color: #212cb5;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 10px;
+}
+
+.task-footer {
+  display: flex;
+  width: 100%;
+  font-size: 12px;
+  float: right;
+}
+
+.task-footer span {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.task-footer i:not(:last-child) {
+  margin-right: 10px;
+}
+
+.task-footer i:last-child {
+  font-style: normal;
+}
+
+.mainHeader {
+  display: flex;
+  justify-content: center;
+  height: 55px;
+  color: #FFFFFF;
+  background-color: #212cb5;
+}
+
+.mainHeader .menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.mainHeader .menu div {
+  padding: 20px 30px;
+  cursor: pointer;
+}
+
+.mainHeader .menu div:hover {
+  color: yellow;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  text-shadow: 0.5px 0.5px #FF0000;
+}
+
+.subBar {
+  display: flex;
+  align-items: center;
+  height: 55px;
+  background-color: #E6ECF0;
+}
+
+.subBar .title {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  margin: auto;
+}
+
+.subBar .title h6 {
+  margin-bottom: 0px;
+}
+
+.subBar .title span {
+  margin-left: 10px;
+  background-color: blue;
+  color: white;
+  padding: 1px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  margin: 20px 0;
+  width: max-content;
+  border: 2px solid #E6ECF0;
+  border-radius: 4px;
+}
+
+.searchContainer:hover, .searchContainer:focus {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+}
+
+.searchContainer .search-bar {
+  width: 265px;
+  height: 30px;
+  margin-left: 5px;
+  border: 0;
+  outline: none;
+  font-size: 12px;
+
+}
+
+.searchContainer .search-bar::placeholder {
+  font-size: 12px;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.card-text {
+  font-size: 12px;
+}
+
+.cardType {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.cardType .actions {
+  display: flex;
+}
+
+.cardType .actions div {
+  padding: 5px 9px;
+  border-radius: 20px;
+  background-color: #D5D5D5;
+}
+
+.cardType .actions div:last-child {
+  margin-left: 10px;
+}
+
+.rounded-circle {
+  height: 50px;
+  border: 2px solid rgb(227, 222, 222);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.containerWrapper2:not(:last-child) {
+  margin-right: 30px;
+}
+
+.card {
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.totalTask {
+  background-color: #4e5b5b;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  color: #FFFFFF;
+}
+
+#listContainer {
+  display: flex;
+  overflow: auto;
+  min-height: 700px;
+  width: 100%;
+}
+
+.autoGenPassword {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.autoGenPassword .clip-board {
+  position: absolute;
+  right: 0;
+  margin-right: 5px;
+  margin-bottom: 0px;
+  color: gray;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+#backlog, #newUser {
+  display: none;
+}
+
+.hiddenElement {
+  /* display: none; */
+}
+
+hr {
+  margin: 5px;
+}
+
+#totalCost {
+  margin-left: 0px;
+}
